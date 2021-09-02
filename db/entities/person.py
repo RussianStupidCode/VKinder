@@ -4,10 +4,11 @@ from db.entities.database import Base
 from db.entities.interest import person_to_interest
 
 # необходима для связи между подходящими людьми
-person_relationship = sql.Table(
+person_to_person = sql.Table(
     'person_to_person', Base.metadata,
     sql.Column('first_id', sql.Integer, sql.ForeignKey('person.id')),
-    sql.Column('second_id', sql.Integer, sql.ForeignKey('person.id'))
+    sql.Column('second_id', sql.Integer, sql.ForeignKey('person.id')),
+    sql.UniqueConstraint('first_id', 'second_id')
 )
 
 
@@ -25,15 +26,15 @@ class Person(Base):
 
     photos = relationship('Photo')
 
-    person = relationship(
+    interests = relationship(
         "Interest",
         secondary=person_to_interest,
         back_populates="persons")
 
-    other_person = relation(
-                    'persons', secondary=person_relationship,
-                    primaryjoin=person_relationship.c.first_id == id,
-                    secondaryjoin=person_relationship.c.second_id == id,
+    persons = relation(
+                    'Person', secondary=person_to_person,
+                    primaryjoin=person_to_person.c.first_id == id,
+                    secondaryjoin=person_to_person.c.second_id == id,
                     backref="second")
 
     def __repr__(self):

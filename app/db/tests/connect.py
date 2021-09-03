@@ -1,11 +1,11 @@
 import pytest
 import os
-import db.connect
+from app.db.connect import session_sqlite
 
 @pytest.fixture
 def session():
     db_path = os.path.join(os.path.dirname(__file__), '..', 'test_sqlite3.db')
-    Session = db.connect.session_sqlite(db_path)
+    Session = session_sqlite(db_path)
     session = Session()
 
     yield session

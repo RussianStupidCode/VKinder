@@ -1,6 +1,6 @@
 import sqlalchemy as sql
 from sqlalchemy.orm import relationship
-from db.entities.database import Base
+from app.db.entities.database import Base
 
 person_to_interest = sql.Table(
     'person_to_interest', Base.metadata,

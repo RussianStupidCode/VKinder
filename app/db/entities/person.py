@@ -1,7 +1,7 @@
 import sqlalchemy as sql
 from sqlalchemy.orm import relation, relationship
-from db.entities.database import Base
-from db.entities.interest import person_to_interest
+from app.db.entities.database import Base
+from app.db.entities.interest import person_to_interest
 
 # необходима для связи между подходящими людьми
 person_to_person = sql.Table(
@@ -19,9 +19,8 @@ class Person(Base):
     first_name = sql.Column('first_name', sql.String)
     last_name = sql.Column('last_name', sql.String)
     age = sql.Column('age', sql.Integer)
-    url = sql.Column('url', sql.String)
     gender = sql.Column('gender', sql.String)
-    status = sql.Column('status', sql.String)
+    relation_status = sql.Column('status', sql.String)
     city = sql.Column('city', sql.String)
 
     photos = relationship('Photo')

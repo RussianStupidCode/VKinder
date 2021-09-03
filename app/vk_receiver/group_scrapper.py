@@ -19,6 +19,6 @@ def get_most_popular_groups():
 
     rows = [row for row in raw_rows if row.find('td', class_='specifictd')]
     groups_name = [row.find('td', class_='specifictd').text for row in rows]
-    groups_name = [name[0:-3] for name in groups_name]
+    groups_name = [name[0:-2] for name in groups_name]
 
     return groups_name

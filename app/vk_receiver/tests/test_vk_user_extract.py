@@ -9,12 +9,12 @@ def user_info():
 
 
 @pytest.fixture()
-def vk_session():
-    yield VkReceiver().session
+def vk_receiver():
+    yield VkReceiver()
 
 
-def test_extract_info(user_info, vk_session):
-    user = VkUser(user_info, vk_session)
+def test_extract_info(user_info, vk_receiver):
+    user = VkUser(user_info, vk_receiver)
 
     assert user.first_name == user_info['first_name']
     assert user.last_name == user_info['last_name']
@@ -22,4 +22,9 @@ def test_extract_info(user_info, vk_session):
     assert user.age is None
     assert user.city == user_info['city']['title']
     assert user.relation is None
-    assert len(user.most_popular_photo) != 0
+
+
+def test_extract_user_photo(user_info, vk_receiver):
+    user = VkUser(user_info, vk_receiver)
+    photos = vk_receiver.get_most_popular_photo(user.id)
+    assert len(photos) > 1

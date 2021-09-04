@@ -3,18 +3,31 @@ from app.vk_receiver.utils import get_vk_user_age, get_vk_user_city
 
 
 class VkUser:
-    def __init__(self, vk_json_user_info, vk_session):
-        self.__vk_session = vk_session
+    def __init__(self, vk_json_user_info, user_weight=1):
         self.__user_info = vk_json_user_info
+        self.user_weight = user_weight
         self.__set_info()
+
+    @staticmethod
+    def create_user(**kwargs):
+        user = VkUser
+        user.id = kwargs['id']
+        user.first_name = kwargs.get('first_name', None)
+        user.last_name = kwargs.get('last_name', None)
+        user.city = kwargs.get('city', None)
+        user.age = kwargs.get('age', None)
+        user.relation = kwargs.get('relation', None)
+        user.gender = kwargs.get('gender', None)
+        user.url = f"https://vk.com/id{user.id}"
 
     def __set_info(self):
         self.first_name = self.__user_info.get('first_name', None)
         self.last_name = self.__user_info.get('last_name', None)
-        self.id = self.__user_info['id']
+        self.id = self.__user_info.get('id', None)
         self.url = f'https://vk.com/id{self.id}'
+        self.interests = self.__user_info.get('interests', None)
 
-        gender = self.__user_info['sex']
+        gender = self.__user_info.get('sex', None)
         self.gender = SexCriterion.possible_values.get(gender, None)
 
         self.age = get_vk_user_age(self.__user_info.get('bdate', None))
@@ -23,24 +36,3 @@ class VkUser:
         relation = self.__user_info.get('relation', None)
         self.relation = RelationCriterion.possible_values.get(relation, None)
 
-        self.__set_most_popular_photo()
-
-    @staticmethod
-    def __extract_photo_properties(photo_json_info):
-        return {
-            'url': photo_json_info['sizes'][-1]['url'],
-            'likes': photo_json_info['likes']['count']
-        }
-
-    def __set_most_popular_photo(self, max_count=3):
-        params = {
-            'owner_id': self.id,
-            'extended': 1,
-            'album_id': 'profile',
-            'photo_sizes': 1,
-            'count': 1000
-        }
-        photos = self.__vk_session.method('photos.get', values=params)['items']
-        photos.sort(key=lambda x: x['likes']['count'], reverse=True)
-        photos = photos[0:max_count]
-        self.most_popular_photo = [VkUser.__extract_photo_properties(photo) for photo in photos]

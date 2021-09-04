@@ -1,6 +1,6 @@
 import os
 
-SQLITE_PATH = os.path.join(os.path.dirname(__file__), '..', 'sqlite3.db')
+SQLITE_PATH = os.path.join(os.path.dirname(__file__), '../..', 'sqlite3.db')
 
 DATABASE = {
     'drivername': 'postgresql+psycopg2',

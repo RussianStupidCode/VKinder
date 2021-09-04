@@ -1,7 +1,7 @@
 import sqlalchemy.exc
 
-from db.tests.connect import session
-from db.tables import Person, Photo, Interest
+from app.db.tables import Person, Photo, Interest
+from app.db.tests.connect import session
 
 
 def test_add_person(session):
@@ -10,9 +10,8 @@ def test_add_person(session):
         first_name="f_1",
         last_name='l_1',
         age=21,
-        url='http//',
         gender='male',
-        status='free',
+        relation_status='free',
         city='ekb'
     )
 
@@ -21,9 +20,8 @@ def test_add_person(session):
         first_name="f_1",
         last_name='l_1',
         age=21,
-        url='http//',
         gender='male',
-        status='free',
+        relation_status='free',
         city='moscow'
     )
 
@@ -42,9 +40,8 @@ def test_add_person_repeat(session):
         first_name="f_1",
         last_name='l_1',
         age=21,
-        url='http//',
         gender='male',
-        status='free',
+        relation_status='free',
         city='ekb'
     )
 
@@ -53,9 +50,8 @@ def test_add_person_repeat(session):
         first_name="f_1",
         last_name='l_1',
         age=21,
-        url='http//',
         gender='male',
-        status='free',
+        relation_status='free',
         city='moscow'
     )
 
@@ -76,9 +72,8 @@ def test_add_interest(session):
         first_name="f_1",
         last_name='l_1',
         age=21,
-        url='http//',
         gender='male',
-        status='free',
+        relation_status='free',
         city='ekb'
     )
 
@@ -96,9 +91,8 @@ def test_add_photo(session):
         first_name="f_1",
         last_name='l_1',
         age=21,
-        url='http//',
         gender='male',
-        status='free',
+        relation_status='free',
         city='ekb'
     )
 

@@ -1,5 +1,5 @@
 import sqlalchemy as sql
-from db.entities.database import Base
+from app.db.entities.database import Base
 
 
 class Photo(Base):

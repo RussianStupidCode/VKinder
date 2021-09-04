@@ -3,9 +3,9 @@ class Criterion:
     possible_values = {}
 
     def __init__(self, value=None, weight=1, is_required=False):
-        self.value = value
-        self.weight = weight
-        self.is_required = is_required
+        self._value = value
+        self._weight = weight
+        self._is_required = is_required
 
     @classmethod
     def possible_value_to_str(cls):
@@ -18,13 +18,17 @@ class Criterion:
     def validation(cls, value):
         pass
 
+    @property
+    def is_required(self):
+        return  self._is_required
+
     def is_agree(self, value):
         """подходит ли величина по критерию"""
-        return value == self.value
+        return value == self._value
 
     def get_weight(self, value):
         if self.is_agree(value):
-            return self.weight
+            return self._weight
         return 0
 
     def __str__(self):
@@ -36,20 +40,20 @@ class Criterion:
 class AgeCriterion(Criterion):
     def __init__(self, min_age=0, max_age=9999, weight=1, is_required=False):
         super().__init__(None, weight, is_required)
-        self.min_age = min_age
-        self.max_age = max_age
+        self.__min_age = min_age
+        self.__max_age = max_age
 
     def is_agree(self, value):
         if value is None:
             return False
 
-        return self.min_age <= value <= self.max_age
+        return self.__min_age <= value <= self.__max_age
 
     @classmethod
     def validation(cls, min_age, max_age):
         try:
-            int(min_age)
-            int(max_age)
+            min_age = int(min_age)
+            max_age = int(max_age)
         except:
             raise ValueError("Возраст должен быть целым неотрицательным числом")
 
@@ -63,9 +67,9 @@ class SexCriterion(Criterion):
     """Пол"""
 
     possible_values = {
-        '1': 'женщина',
-        '2': 'мужчина',
-        '0': 'не указан'
+        1: 'женщина',
+        2: 'мужчина',
+        0: 'не указан'
     }
 
     def __init__(self, value=None, weight=1, is_required=False):
@@ -74,7 +78,7 @@ class SexCriterion(Criterion):
     @classmethod
     def validation(cls, value):
         try:
-            int(value)
+            value = int(value)
         except:
             raise ValueError(f"Пол должен быть целым числом \n{cls.possible_value_to_str()}")
 
@@ -86,15 +90,15 @@ class RelationCriterion(Criterion):
     """Семейное положение"""
 
     possible_values = {
-        '1': 'не женат/не замужем',
-        '2': 'есть друг/есть подруга',
-        '3': 'помолвлен/помолвлена',
-        '4': 'женат/замужем',
-        '5': 'всё сложно',
-        '6': 'в активном поиске',
-        '7': 'влюблён/влюблена',
-        '8': 'в гражданском браке',
-        '0': 'не указано'
+        1: 'не женат/не замужем',
+        2: 'есть друг/есть подруга',
+        3: 'помолвлен/помолвлена',
+        4: 'женат/замужем',
+        5: 'всё сложно',
+        6: 'в активном поиске',
+        7: 'влюблён/влюблена',
+        8: 'в гражданском браке',
+        0: 'не указано'
     }
 
     def __init__(self, value=None, weight=1, is_required=False):
@@ -103,7 +107,7 @@ class RelationCriterion(Criterion):
     @classmethod
     def validation(cls, value):
         try:
-            int(value)
+            value = int(value)
         except:
             raise ValueError(f"Семейное положение должно быть целым числом \n{cls.possible_value_to_str()}")
 
@@ -113,11 +117,17 @@ class RelationCriterion(Criterion):
 
 class CityCriterion(Criterion):
 
-    def __init__(self, value=None, weight=1, is_required=False):
+    def __init__(self, value: list = None, weight=1, is_required=False):
+        value = [v.lower() for v in value]
         super().__init__(value, weight, is_required)
 
     def is_agree(self, value):
-        return value.lower() in self.value
+        return value.lower() in self._value
+
+    @classmethod
+    def validation(cls, value):
+        if not isinstance(value, list) or not all([isinstance(v, str) for v in value]):
+            raise ValueError('Значение критерия городов должно быть списком городов')
 
 
 class CriteriaManager:
@@ -150,8 +160,3 @@ class CriteriaManager:
             if value.is_required:
                 return False
         return True
-
-
-if __name__ == "__main__":
-    s = SexCriterion()
-    SexCriterion.validation('3')

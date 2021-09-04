@@ -12,6 +12,10 @@ class VkReceiver:
         self.__is_valid = self.__is_token_valid()
 
     @property
+    def session(self):
+        return self.__vk_session
+
+    @property
     def search_fields(self):
         return ['sex', 'bdate', ' has_photo', 'interests', 'relation', 'city']
 
@@ -30,7 +34,7 @@ class VkReceiver:
         group = self.__vk_session.method('groups.search', values={'q': group_name})
         return group['items'][0]['id']
 
-    def get_suitable_peoples_id(self, offset=0, max_count=10, **parametrs):
+    def get_suitable_peoples(self, offset=0, max_count=10, **parametrs):
         group_id = self.__get_group_id(self.__most_popular_group)
         params = {
             **parametrs,
@@ -45,4 +49,4 @@ class VkReceiver:
 if __name__ == "__main__":
     session = VkReceiver()
     params = {}
-    print(session.get_suitable_peoples_id(**params))
+    print(session.get_suitable_peoples(**params))

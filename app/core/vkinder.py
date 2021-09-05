@@ -6,7 +6,7 @@ import math
 
 
 class VkInder:
-    def __init__(self, vk_receiver=VkReceiver(), criteria=CriteriaManager()):
+    def __init__(self, vk_receiver, criteria):
         self._user = VkUser(vk_receiver.get_user_json_info())
         self._vk_receiver = vk_receiver
         self._criteria = criteria
@@ -17,6 +17,10 @@ class VkInder:
 
     def set_criteria(self, criteria: dict):
         self._criteria.possible_criteria = criteria
+
+    @property
+    def criteria_info(self):
+        return self._criteria.criteria
 
     @property
     def saving_user_id(self) -> set:
@@ -32,7 +36,7 @@ class VkInder:
 
     def get_user_json_list(self) -> list:
         params = self._criteria.return_vk_params()
-        params['city'] = self._vk_receiver.get_city_id(params['city'])['items'][0]['id']
+        params['city'] = self._vk_receiver.get_city_id(params['city'])
         user_json_info = self._vk_receiver.get_suitable_peoples(**params)['items']
         return self.get_no_repeat_user(user_json_info)
 

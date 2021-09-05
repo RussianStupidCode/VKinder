@@ -15,7 +15,7 @@ class VkReceiver:
 
     @property
     def search_fields(self):
-        return ['sex', 'bdate', ' has_photo', 'interests', 'relation', 'city']
+        return ['sex', 'bdate', 'has_photo', 'interests', 'relation', 'city']
 
     def raise_token(self):
         self.__vk_session.method('users.get')
@@ -53,7 +53,6 @@ class VkReceiver:
     def get_suitable_peoples(self, offset=0, max_count=1000, **parameters):
         params = {
             **parameters,
-            'sort': 0,
             'fields': ",".join(self.search_fields),
             'count': max_count,
             'offset': offset
@@ -61,7 +60,8 @@ class VkReceiver:
         return self.__vk_session.method('users.search', values=params)
 
     def get_city_id(self, name):
-        return self.__vk_session.method('database.getCities', values={'q': name, 'country_id': 1})
+        cities = self.__vk_session.method('database.getCities', values={'q': name.lower(), 'country_id': 1})
+        return cities['items'][0]['id']
 
     def get_all_photos(self, user_id):
         params = {

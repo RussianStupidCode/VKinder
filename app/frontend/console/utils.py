@@ -1,4 +1,4 @@
-from app.frontend.console import config
+from app.core import config
 
 
 def except_input_wrapper(error_message=None):

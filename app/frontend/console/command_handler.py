@@ -26,12 +26,25 @@ class CommandHandler:
             'exit': CommandHandler.exit,
             'sc': self._criteria_command.change_criterion,
             'afu': self.add_favorites_user,
-            'gfu': self.get_favorites_user
+            'gfu': self.get_favorites_user,
+            'help': CommandHandler.help
         }
 
     @staticmethod
     def exit():
         sys.exit(1)
+
+    @staticmethod
+    def help():
+        print("""Список команд:
+        gsu - получить подходящих пользователей по критериям
+        gcl - получить список установленных критериев
+        exit - выход
+        help - справка
+        sc - установить (изменить) критерии
+        afu - добавить пользователя в избранное
+        gfu - получить список избранных пользователей
+        """)
 
     @except_input_wrapper('Неверный токен')
     def set_vk_token(self):
@@ -43,6 +56,7 @@ class CommandHandler:
 
     def get_suitable_users(self):
         if self.is_need_get_user:
+            print('___Загрузка___')
             self.vk_users_generator = self.vkinder.get_vk_users_iterable(chunk_size=3)
             self.is_need_get_user = False
 
@@ -86,6 +100,7 @@ class CommandHandler:
             command_name = get_user_input('Введите команду')
             if command_name not in self._commands:
                 print('Неверная команда')
+                CommandHandler.help()
                 continue
 
             command = self._commands[command_name]

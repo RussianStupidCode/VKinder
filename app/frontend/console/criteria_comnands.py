@@ -35,6 +35,8 @@ def change_criterion(value, criterion_class, key, criteria):
 
 
 class CriteriaCommandHandler:
+    """класс для изменения критериев пользователем"""
+
     def __init__(self, criteria):
         self._criteria = criteria
         self._criteria_name = {
@@ -52,6 +54,8 @@ class CriteriaCommandHandler:
         }
 
     def change_criterion(self):
+        print(f'Список критериев: {self._criteria_name}')
+
         criterion_name = get_user_input('Введите название критерия').lower()
         if criterion_name not in self._criteria_name:
             print(f'Ошибка нет критерия {criterion_name} в списке {self._criteria_name.keys()}')

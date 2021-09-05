@@ -1,7 +1,7 @@
 from app.core.vk_receiver import VkReceiver
 from app.core.vk_receiver import VkUser
 from app.core.vk_receiver.user_refiner import refined_users
-from app.core.vk_receiver.search_criteria import CriteriaManager, Criterion
+from app.core.vk_receiver.search_criteria import AgeCriterion, CityCriterion, SexCriterion
 import math
 
 
@@ -10,17 +10,30 @@ class VkInder:
         self._user = VkUser(vk_receiver.get_user_json_info())
         self._vk_receiver = vk_receiver
         self._criteria = criteria
+        VkInder.set_criteria_for_user(self._criteria, self._user)
         self._save_user_id = set()  # id пользователей, которые уже получались в сессии
 
-    def change_criterion(self, name, criterion: Criterion):
-        self._criteria.possible_criteria[name] = criterion
+    @staticmethod
+    def set_criteria_for_user(criteria, user: VkUser):
+        info = user.json_info
+        age = info.get('age', None)
+        if age is not None:
+            criteria.change_criterion('age', AgeCriterion(age - 5, age + 5, 1, is_required=True))
+
+        city = info.get('city')
+        if city is not None:
+            criteria.change_criterion('city', CityCriterion(city['title'], 1, is_required=True))
+
+        sex = info.get('sex')
+        if sex is not None:
+            sex = 2 if sex == 1 else 1
+            criteria.change_criterion('sex', SexCriterion(sex, 1, is_required=True))
+
+        return criteria
 
     @property
     def self_user_info(self):
         return self._user
-
-    def set_criteria(self, criteria: dict):
-        self._criteria.possible_criteria = criteria
 
     @property
     def criteria_info(self):

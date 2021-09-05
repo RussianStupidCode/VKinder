@@ -10,6 +10,10 @@ class VkUser:
         if vk_json_user_info is not None:
             self.__set_info()
 
+    @property
+    def json_info(self):
+        return self.__user_info
+
     @staticmethod
     def create_user(**kwargs):
         user = VkUser()

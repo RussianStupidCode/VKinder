@@ -1,6 +1,6 @@
-from app.vk_receiver.search_criteria import CriteriaManager
-from app.vk_receiver.utils import get_vk_user_age, get_vk_user_city
-from app.vk_receiver.vk_user import VkUser
+from app.core.vk_receiver.search_criteria import CriteriaManager
+from app.core.vk_receiver.utils import get_vk_user_age, get_vk_user_city
+from app.core.vk_receiver import VkUser
 
 
 def get_user_info(vk_json_user_info) -> dict:
@@ -29,9 +29,9 @@ def user_suit_value(vk_json_user_info, criteria: CriteriaManager) -> float:
 
     # Проверка если пользователь не подходит по любому обязательному критерию
     for key, value in user_info.items():
-        weight_criterion = criteria.possible_criteria[key].get_weight(value)
+        weight_criterion = criteria.get_criterion(key).get_weight(value)
 
-        if criteria.possible_criteria[key].is_required and weight_criterion <= 0:
+        if criteria.get_criterion(key).is_required and weight_criterion <= 0:
             return 0
         else:
             result += weight_criterion

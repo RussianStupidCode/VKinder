@@ -1,7 +1,6 @@
 import sqlalchemy.exc
-
-from app.db.tables import Person, Photo, Interest
-from app.db.tests.connect import session
+from app.core.db.tests.connect import session
+from app.core.db.tables import Person, Photo, Interest
 
 
 def test_add_person(session):

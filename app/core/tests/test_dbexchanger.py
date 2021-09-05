@@ -1,8 +1,8 @@
 import pytest
 import os
-from app.db.connect import session_sqlite
+from app.core.db.connect import session_sqlite
 from app.core.db_exchanger import DbExchanger
-from app.vk_receiver.vk_user import VkUser
+from app.core.vk_receiver import VkUser
 
 
 @pytest.fixture
@@ -22,8 +22,8 @@ def test_add_suitable_users(session):
     db = DbExchanger(session)
     user_1 = VkUser({'id': 121})
     user_2 = VkUser({'id': 11})
-    photos = [{'url': 'dsgdfg'}]
-    db.suitable_users_save(user_1, user_2, photos)
+    user_2.photos = [{'url': 'dsgdfg'}]
+    db.suitable_users_save(user_1, user_2)
     person = db.get_person(user_2.id)
 
     assert len(person.photos) > 0

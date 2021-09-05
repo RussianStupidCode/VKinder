@@ -1,6 +1,6 @@
 import pytest
-from app.vk_receiver.vk_user import VkUser
-from app.vk_receiver.receiver import VkReceiver
+from app.core.vk_receiver.vk_user import VkUser
+from app.core.vk_receiver.receiver import VkReceiver
 
 
 @pytest.fixture()

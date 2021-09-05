@@ -1,12 +1,19 @@
 import pytest
-from app.vk_receiver.receiver import VkReceiver
-from app.vk_receiver.user_refiner import refined_users, user_suit_value
-from app.vk_receiver.search_criteria import CriteriaManager, CityCriterion
+from app.core.vk_receiver.user_refiner import refined_users, user_suit_value
+from app.core.vk_receiver.search_criteria import CriteriaManager, CityCriterion, AgeCriterion, RelationCriterion, SexCriterion
 
 
 @pytest.fixture()
 def criteria():
-    return CriteriaManager()
+    criteria = CriteriaManager()
+    possible_criteria = {
+        'age': AgeCriterion(),
+        'sex': SexCriterion(1),
+        'city': CityCriterion('Екатеринбург'),
+        'relation': RelationCriterion(6)
+    }
+    criteria.set_possible_criteria(possible_criteria)
+    return criteria
 
 
 @pytest.fixture()
@@ -22,6 +29,6 @@ def test_refined_users(users_info, criteria):
 
 
 def test_user_suit_value(users_info, criteria: CriteriaManager):
-    criteria.possible_criteria['city'] = CityCriterion('Санкт-Петербург', 10, True)
+    criteria.change_criterion('city', CityCriterion('Санкт-Петербург', 10, True))
     value = user_suit_value(users_info['items'][0], criteria)
     assert value >= 10

@@ -1,7 +1,6 @@
 import pytest
-from app.vk_receiver.receiver import VkReceiver
-from app.vk_receiver.user_refiner import refined_users, user_suit_value
-from app.vk_receiver.search_criteria import CriteriaManager, CityCriterion
+from app.core.vk_receiver.user_refiner import refined_users, user_suit_value
+from app.core.vk_receiver.search_criteria import CriteriaManager, CityCriterion
 
 
 @pytest.fixture()

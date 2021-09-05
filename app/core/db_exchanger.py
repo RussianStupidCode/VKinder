@@ -1,5 +1,5 @@
-from app.db.tables import Photo, Person
-from app.vk_receiver.vk_user import VkUser
+from app.core.db.tables import Photo, Person
+from app.core.vk_receiver import VkUser
 from app.core.mapper import Mapper
 
 

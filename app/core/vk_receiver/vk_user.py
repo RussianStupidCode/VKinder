@@ -1,11 +1,12 @@
-from app.vk_receiver.search_criteria import SexCriterion, RelationCriterion
-from app.vk_receiver.utils import get_vk_user_age, get_vk_user_city
+from app.core.vk_receiver.search_criteria import SexCriterion, RelationCriterion
+from app.core.vk_receiver.utils import get_vk_user_age, get_vk_user_city
 
 
 class VkUser:
     def __init__(self, vk_json_user_info, user_weight=1):
         self.__user_info = vk_json_user_info
         self.user_weight = user_weight
+        self.photos = []
         self.__set_info()
 
     @staticmethod
@@ -35,4 +36,12 @@ class VkUser:
 
         relation = self.__user_info.get('relation', None)
         self.relation = RelationCriterion.possible_values.get(relation, None)
+
+    def __str__(self):
+        string = f'{self.first_name} {self.last_name} {self.id} {self.url}'
+        if len(self.photos) != 0:
+            string += '\n'
+        for photo in self.photos:
+            string += f'\t\t{photo["url"]} число лайков {photo["likes"]}\n'
+        return string
 

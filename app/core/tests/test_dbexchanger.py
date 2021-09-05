@@ -1,8 +1,8 @@
 import pytest
 import os
-from app.db.connect import session_sqlite
+from app.core.db.connect import session_sqlite
 from app.core.db_exchanger import DbExchanger
-from app.vk_receiver.vk_user import VkUser
+from app.core.vk_receiver import VkUser
 
 
 @pytest.fixture

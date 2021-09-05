@@ -1,6 +1,6 @@
 import pytest
 import os
-from app.db.connect import session_sqlite
+from app.core.db.connect import session_sqlite
 
 @pytest.fixture
 def session():

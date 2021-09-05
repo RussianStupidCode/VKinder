@@ -1,6 +1,6 @@
-from app.vk_receiver.search_criteria import CriteriaManager
-from app.vk_receiver.utils import get_vk_user_age, get_vk_user_city
-from app.vk_receiver.vk_user import VkUser
+from app.core.vk_receiver.search_criteria import CriteriaManager
+from app.core.vk_receiver.utils import get_vk_user_age, get_vk_user_city
+from app.core.vk_receiver import VkUser
 
 
 def get_user_info(vk_json_user_info) -> dict:

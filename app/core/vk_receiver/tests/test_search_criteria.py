@@ -1,4 +1,4 @@
-import app.vk_receiver.search_criteria as criteria
+import app.core.vk_receiver.search_criteria as criteria
 
 
 def test_valid_age_criterion_success_1():

@@ -1,4 +1,3 @@
-from app.vk_receiver.group_scrapper import get_most_popular_groups
 import vk_api
 
 DEFAULT_VK_TOKEN = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
@@ -18,13 +17,16 @@ class VkReceiver:
     def search_fields(self):
         return ['sex', 'bdate', ' has_photo', 'interests', 'relation', 'city']
 
+    def raise_token(self):
+        self.__vk_session.method('users.get')
+
     @property
     def is_valid(self):
         return self.__is_valid
 
     def __is_token_valid(self):
         try:
-            self.__vk_session.method('users.get')
+            self.raise_token()
             return True
         except vk_api.exceptions.ApiError:
             return False

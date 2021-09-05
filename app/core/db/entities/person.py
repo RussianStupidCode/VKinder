@@ -1,7 +1,7 @@
 import sqlalchemy as sql
 from sqlalchemy.orm import relation, relationship
-from app.db.entities.database import Base
-from app.db.entities.interest import person_to_interest
+from app.core.db.entities.database import Base
+from app.core.db.entities.interest import person_to_interest
 
 # необходима для связи между подходящими людьми
 person_to_person = sql.Table(

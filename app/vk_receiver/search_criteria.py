@@ -7,6 +7,10 @@ class Criterion:
         self._weight = weight
         self._is_required = is_required
 
+    @property
+    def value(self):
+        return self._value
+
     @classmethod
     def possible_value_to_str(cls):
         result = ""
@@ -42,6 +46,14 @@ class AgeCriterion(Criterion):
         super().__init__(None, weight, is_required)
         self.__min_age = min_age
         self.__max_age = max_age
+
+    @property
+    def min_age(self):
+        return self.__min_age
+
+    @property
+    def max_age(self):
+        return self.__max_age
 
     def is_agree(self, value):
         if value is None:
@@ -117,17 +129,16 @@ class RelationCriterion(Criterion):
 
 class CityCriterion(Criterion):
 
-    def __init__(self, value: list = None, weight=1, is_required=False):
-        value = [v.lower() for v in value]
+    def __init__(self, value: str = None, weight=1, is_required=False):
         super().__init__(value, weight, is_required)
 
     def is_agree(self, value):
-        return value.lower() in self._value
+        return value.lower() == self._value.lower()
 
     @classmethod
     def validation(cls, value):
-        if not isinstance(value, list) or not all([isinstance(v, str) for v in value]):
-            raise ValueError('Значение критерия городов должно быть списком городов')
+        if not isinstance(value, str):
+            raise ValueError('Критерий города должно быть строкой')
 
 
 class CriteriaManager:
@@ -151,7 +162,7 @@ class CriteriaManager:
         self.possible_criteria = {
             'age': AgeCriterion(),
             'sex': SexCriterion(0),
-            'city': CityCriterion(['']),
+            'city': CityCriterion(''),
             'relation': RelationCriterion(0)
         }
 
@@ -160,3 +171,13 @@ class CriteriaManager:
             if value.is_required:
                 return False
         return True
+
+    def return_vk_params(self):
+        return {
+            'age_from': self.possible_criteria['age'].min_age,
+            'age_to': self.possible_criteria['age'].max_age,
+            'has_photo': 1,  # фото обязательно!
+            'relation': self.possible_criteria['relation'].value,
+            'sex': self.possible_criteria['sex'].value,
+            'city': self.possible_criteria['city'].value
+        }

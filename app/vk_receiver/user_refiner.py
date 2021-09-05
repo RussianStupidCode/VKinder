@@ -43,13 +43,14 @@ def user_suit_value(vk_json_user_info, criteria: CriteriaManager) -> float:
     return result
 
 
-def refined_users(vk_session, vk_json_users_info: list, max_refined=100, criteria=CriteriaManager()):
+def refined_users(vk_json_users_info: list, max_refined=1000, criteria=CriteriaManager()):
     refined_list = []
     last_user_index = 0
 
     for idx, user in enumerate(vk_json_users_info):
-        if user_suit_value(user, criteria):
-            refined_list.append(VkUser(user, vk_session))
+        user_weight = user_suit_value(user, criteria)
+        if user_weight > 0:
+            refined_list.append(VkUser(user, user_weight))
             last_user_index = idx
 
         if len(refined_list) >= max_refined:

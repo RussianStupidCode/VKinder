@@ -42,16 +42,7 @@ def test_valid_age_criterion_fail_2():
 
 
 def test_valid_city_criterion_success_1():
-    cities = ['Москва']
-    try:
-        criteria.CityCriterion.validation(cities)
-        assert True
-    except:
-        assert False
-
-
-def test_valid_city_criterion_success_2():
-    cities = ['Сант-Петербург']
+    cities = 'Москва'
     try:
         criteria.CityCriterion.validation(cities)
         assert True
@@ -60,7 +51,7 @@ def test_valid_city_criterion_success_2():
 
 
 def test_valid_city_criterion_fail_1():
-    cities ='Москва'
+    cities = ['Сант-Петербург']
     try:
         criteria.CityCriterion.validation(cities)
         assert False

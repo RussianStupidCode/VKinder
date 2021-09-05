@@ -8,7 +8,6 @@ DEFAULT_VK_API_VERSION = 5.131
 class VkReceiver:
     def __init__(self, token=DEFAULT_VK_TOKEN):
         self.__vk_session = vk_api.VkApi(token=token)
-        self.__most_popular_group = get_most_popular_groups()[0]
         self.__is_valid = self.__is_token_valid()
 
     @property
@@ -34,10 +33,14 @@ class VkReceiver:
         group = self.__vk_session.method('groups.search', values={'q': group_name})
         return group['items'][0]['id']
 
-    def get_suitable_peoples(self, offset=0, max_count=10, **parametrs):
-        group_id = self.__get_group_id(self.__most_popular_group)
+    def get_peoples_in_group(self, offset=0, max_count=1000, group_id=1, **parameters):
+        """
+        метод для выборки из групп, позволяет обойти ограаничение в первые 1000 пользователей
+        проблема в необходимости самостоятельного отбора по критериям
+        такой подход очень медленный от его использования пока отказался
+        """
         params = {
-            **parametrs,
+            **parameters,
             'fields': ",".join(self.search_fields),
             'group_id': group_id,
             'count': max_count,
@@ -45,8 +48,55 @@ class VkReceiver:
         }
         return self.__vk_session.method('groups.getMembers', values=params)
 
+    def get_suitable_peoples(self, offset=0, max_count=1000, **parameters):
+        params = {
+            **parameters,
+            'sort': 0,
+            'fields': ",".join(self.search_fields),
+            'count': max_count,
+            'offset': offset
+        }
+        return self.__vk_session.method('users.search', values=params)
 
-if __name__ == "__main__":
-    session = VkReceiver()
-    params = {}
-    print(session.get_suitable_peoples(**params))
+    def get_city_id(self, name):
+        return self.__vk_session.method('database.getCities', values={'q': name, 'country_id': 1})
+
+    def get_all_photos(self, user_id):
+        params = {
+            'owner_id': user_id,
+            'extended': 1,
+            'album_id': 'profile',
+            'photo_sizes': 1,
+            'offset': 0,
+            'count': 1000
+        }
+        all_photos = []
+        photos = self.__vk_session.method('photos.get', values=params)['items']
+
+        while len(photos) > 0:
+            all_photos.extend(photos)
+            params['offset'] += params['count']
+            photos = self.__vk_session.method('photos.get', values=params)['items']
+
+        return all_photos
+
+    @staticmethod
+    def __extract_photo_properties(photo_json_info):
+        return {
+            'url': photo_json_info['sizes'][-1]['url'],
+            'likes': photo_json_info['likes']['count']
+        }
+
+    def get_most_popular_photo(self, user_id, max_count=3):
+        photos = self.get_all_photos(user_id)
+        photos.sort(key=lambda x: x['likes']['count'], reverse=True)
+        photos = photos[0:max_count]
+        return [VkReceiver.__extract_photo_properties(photo) for photo in photos]
+
+    def get_user_json_info(self, user_id=None):
+        params = {'fields': ",".join(self.search_fields)}
+        if user_id:
+            params['users_id'] = user_id
+        return self.__vk_session.method('users.get', values=params)[0]
+
+

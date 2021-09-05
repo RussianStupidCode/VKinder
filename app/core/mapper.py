@@ -18,7 +18,7 @@ class Mapper:
 
     @staticmethod
     def person_to_vk_user(person: Person):
-        return VkUser.create_user(**{
+        user = VkUser.create_user(**{
             'id': person.id,
             'first_name': person.first_name,
             'last_name': person.last_name,
@@ -27,3 +27,6 @@ class Mapper:
             'relation': person.relation_status,
             'age': person.age
         })
+        for photo in person.photos:
+            user.photos.append({'url': photo.url, 'likes': 0})
+        return user

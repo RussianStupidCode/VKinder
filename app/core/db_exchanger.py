@@ -16,7 +16,12 @@ class DbExchanger:
         person = self._session.query(Person).filter_by(id=id).first()
         return person
 
-    def suitable_users_save(self, main_user: VkUser, suitable_user: VkUser,  suitable_photos=None):
+    def get_favorites(self, id):
+        """возвращает список свзязанных пользователей"""
+        person = self._session.query(Person).filter_by(id=id).first()
+        return [Mapper.person_to_vk_user(p) for p in person.persons]
+
+    def suitable_users_save(self, main_user: VkUser, suitable_user: VkUser):
         person = self.get_person(id=main_user.id)
         if person is None:
             self.user_save(main_user)
@@ -25,7 +30,7 @@ class DbExchanger:
         suitable_person = Mapper.vk_user_to_person(suitable_user)
         person.persons.append(suitable_person)
 
-        if suitable_photos is not None:
-            photos = [Photo(url=p['url']) for p in suitable_photos]
+        if suitable_user.photos is not None:
+            photos = [Photo(url=p['url']) for p in suitable_user.photos]
             suitable_person.photos.extend(photos)
         self._session.commit()

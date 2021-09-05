@@ -1,5 +1,4 @@
-from app.core.vk_receiver.search_criteria import (CriteriaManager,
-                                                  AgeCriterion,
+from app.core.vk_receiver.search_criteria import (AgeCriterion,
                                                   SexCriterion,
                                                   CityCriterion,
                                                   RelationCriterion)

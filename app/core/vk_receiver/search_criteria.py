@@ -90,7 +90,8 @@ class AgeCriterion(Criterion):
             raise ValueError("Максимальный возраст меньше минимального")
 
     def __str__(self):
-        return f'Возраст: от {self.min_age} до {self.max_age} | {required_to_str(self.is_required)}'
+        return f'Возраст: от {self.min_age} до {self.max_age} |' \
+               f' {required_to_str(self.is_required)} | вес {self._weight}'
 
 
 class SexCriterion(Criterion):
@@ -103,7 +104,7 @@ class SexCriterion(Criterion):
     }
 
     def __init__(self, value=None, weight=1, is_required=False):
-        super().__init__(int(value), weight, is_required)
+        super().__init__(int(value), float(weight), is_required)
 
     @classmethod
     def validation(cls, value, weight):
@@ -117,7 +118,8 @@ class SexCriterion(Criterion):
             raise ValueError(f"Нет такого допустимого значения \n{cls.possible_value_to_str()}")
 
     def __str__(self):
-        return f'Пол: {SexCriterion.possible_values[self.value]} | {required_to_str(self.is_required)}'
+        return f'Пол: {SexCriterion.possible_values[self.value]} | {required_to_str(self.is_required)} ' \
+               f'| вес {self._weight}'
 
 
 class RelationCriterion(Criterion):
@@ -136,7 +138,7 @@ class RelationCriterion(Criterion):
     }
 
     def __init__(self, value=None, weight=1, is_required=False):
-        super().__init__(int(value), weight, is_required)
+        super().__init__(int(value), float(weight), is_required)
 
     @classmethod
     def validation(cls, value, weight):
@@ -150,19 +152,20 @@ class RelationCriterion(Criterion):
             raise ValueError(f"Нет такого допустимого значения \n{cls.possible_value_to_str()}")
 
     def __str__(self):
-        return f'Статус отношений: {RelationCriterion.possible_values[self.value]} | {required_to_str(self.is_required)}'
+        return f'Статус отношений: {RelationCriterion.possible_values[self.value]} ' \
+               f'| {required_to_str(self.is_required)}  | вес {self._weight}'
 
 
 class CityCriterion(Criterion):
 
     def __init__(self, value: str = None, weight=1, is_required=False):
-        super().__init__(value, weight, is_required)
+        super().__init__(value, float(weight), is_required)
 
     def is_agree(self, value):
         return value.lower() == self._value.lower()
 
     def __str__(self):
-        return f'Город: {self.value} | {required_to_str(self.is_required)}'
+        return f'Город: {self.value} | {required_to_str(self.is_required)} | вес {self._weight}'
 
     @classmethod
     def validation(cls, value, weight):

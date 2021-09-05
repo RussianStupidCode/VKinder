@@ -31,3 +31,10 @@ def get_user_input(message):
     while not string:
         string = input(f'{message}: ').strip()
     return string
+
+
+@except_input_wrapper('Некорретный ввод')
+def type_input(need_type, message):
+        return need_type(get_user_input(message))
+
+

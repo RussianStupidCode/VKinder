@@ -15,6 +15,10 @@ class VkInder:
     def change_criterion(self, name, criterion: Criterion):
         self._criteria.possible_criteria[name] = criterion
 
+    @property
+    def self_user_info(self):
+        return self._user
+
     def set_criteria(self, criteria: dict):
         self._criteria.possible_criteria = criteria
 

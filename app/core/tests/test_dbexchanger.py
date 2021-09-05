@@ -22,8 +22,8 @@ def test_add_suitable_users(session):
     db = DbExchanger(session)
     user_1 = VkUser({'id': 121})
     user_2 = VkUser({'id': 11})
-    photos = [{'url': 'dsgdfg'}]
-    db.suitable_users_save(user_1, user_2, photos)
+    user_2.photos = [{'url': 'dsgdfg'}]
+    db.suitable_users_save(user_1, user_2)
     person = db.get_person(user_2.id)
 
     assert len(person.photos) > 0

@@ -98,7 +98,7 @@ class VkReceiver:
     def get_user_json_info(self, user_id=None):
         params = {'fields': ",".join(self.search_fields)}
         if user_id:
-            params['users_id'] = user_id
+            params['user_ids'] = [user_id]
         return self.__vk_session.method('users.get', values=params)[0]
 
 

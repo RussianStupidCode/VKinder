@@ -30,7 +30,6 @@ def user_suit_value(vk_json_user_info, criteria: CriteriaManager) -> float:
     # Проверка если пользователь не подходит по любому обязательному критерию
     for key, value in user_info.items():
         weight_criterion = criteria.get_criterion(key).get_weight(value)
-
         if criteria.get_criterion(key).is_required and weight_criterion <= 0:
             return 0
         else:

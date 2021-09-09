@@ -31,6 +31,13 @@ def test_valid_age_criterion_fail_1():
         assert True
 
 
+def test_age_weight():
+    min_age = 10
+    max_age = 20
+    criterion = criteria.AgeCriterion(min_age, max_age, 1, True)
+    assert criterion.get_weight(15) > 0
+
+
 def test_valid_age_criterion_fail_2():
     min_age = '10'
     max_age = 9

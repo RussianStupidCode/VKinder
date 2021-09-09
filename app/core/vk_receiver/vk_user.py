@@ -10,6 +10,17 @@ class VkUser:
         if vk_json_user_info is not None:
             self.__set_info()
 
+    @property
+    def json_info(self):
+        return self.__user_info
+
+    @property
+    def to_json(self):
+        return {
+            'url': self.url,
+            'photo': [p['url'] for p in self.photos]
+        }
+
     @staticmethod
     def create_user(**kwargs):
         user = VkUser()
@@ -40,12 +51,7 @@ class VkUser:
         self.relation = RelationCriterion.possible_values.get(relation, None)
 
     def __str__(self):
-        string = f'{self.first_name} {self.last_name} {self.id} {self.url}'
-        if len(self.photos) != 0:
-            string += '\n'
-        for photo in self.photos:
-            string += f'\t\t{photo["url"]} число лайков {photo["likes"]}\n'
-        return string
+        return str(self.to_json)
 
     def __eq__(self, other):
         return self.id == other.id

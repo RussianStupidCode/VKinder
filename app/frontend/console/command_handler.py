@@ -26,12 +26,33 @@ class CommandHandler:
             'exit': CommandHandler.exit,
             'sc': self._criteria_command.change_criterion,
             'afu': self.add_favorites_user,
-            'gfu': self.get_favorites_user
+            'gfu': self.get_favorites_user,
+            'help': CommandHandler.help,
+            'cu': self.change_user
         }
 
     @staticmethod
     def exit():
         sys.exit(1)
+
+    @staticmethod
+    def help():
+        print("""Список команд:
+        gsu - получить подходящих пользователей по критериям
+        gcl - получить список установленных критериев
+        exit - выход
+        help - справка
+        sc - установить (изменить) критерии
+        afu - добавить пользователя в избранное
+        gfu - получить список избранных пользователей
+        cu - сменить пользователя
+        """)
+
+    def _refresh_suitable_user(self):
+        self_user_id = self.vkinder.self_user_info.id
+        favorites_user_id = [user.id for user in self.db_exchanger.get_favorites(self_user_id)]
+        self.vk_users_generator = self.vkinder.get_vk_users_iterable(3, favorites_user_id)
+        self.is_need_get_user = False
 
     @except_input_wrapper('Неверный токен')
     def set_vk_token(self):
@@ -41,12 +62,22 @@ class CommandHandler:
         self.vkinder = VkInder(vk_receiver, self._criteria)
         print('Токен сохранен успешно')
 
+    def change_user(self):
+        user_id = type_input(int, 'Введите id пользователя')
+        try:
+            self.vkinder.set_main_user(user_id)
+            self.get_criteria_list()
+            self.is_need_get_user = True  # надо получать пользователей заного (обнулить генератор)
+            self.vkinder.reset_save_users_id()
+        except:
+            print('Некорректный id пользователя')
+
     def get_suitable_users(self):
         if self.is_need_get_user:
-            self.vk_users_generator = self.vkinder.get_vk_users_iterable(chunk_size=3)
-            self.is_need_get_user = False
+            self._refresh_suitable_user()
 
         try:
+            print('___Загрузка___')
             suitable_users = next(self.vk_users_generator)
             self.viewed_users.extend(suitable_users)
             for user in suitable_users:
@@ -86,6 +117,7 @@ class CommandHandler:
             command_name = get_user_input('Введите команду')
             if command_name not in self._commands:
                 print('Неверная команда')
+                CommandHandler.help()
                 continue
 
             command = self._commands[command_name]

@@ -19,6 +19,8 @@ class DbExchanger:
     def get_favorites(self, id):
         """возвращает список свзязанных пользователей"""
         person = self._session.query(Person).filter_by(id=id).first()
+        if person is None:
+            return []
         return [Mapper.person_to_vk_user(p) for p in person.persons]
 
     def suitable_users_save(self, main_user: VkUser, suitable_user: VkUser):

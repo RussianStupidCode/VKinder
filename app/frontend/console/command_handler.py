@@ -68,6 +68,7 @@ class CommandHandler:
             self.vkinder.set_main_user(user_id)
             self.get_criteria_list()
             self.is_need_get_user = True  # надо получать пользователей заного (обнулить генератор)
+            self.vkinder.reset_save_users_id()
         except:
             print('Некорректный id пользователя')
 

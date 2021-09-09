@@ -13,6 +13,9 @@ class VkInder:
         VkInder.set_criteria_for_user(self._criteria, self._user)
         self._save_user_id = set()  # id пользователей, которые уже получались в сессии
 
+    def reset_save_users_id(self):
+        self._save_user_id = set()
+
     @staticmethod
     def set_criteria_for_user(criteria, user: VkUser):
         info = user.json_info

@@ -1,6 +1,7 @@
 from app.core.vk_receiver.search_criteria.criterion import Criterion
 from app.core.vk_receiver.search_criteria.utils import required_to_str
 
+
 class CityCriterion(Criterion):
 
     def __init__(self, value: str = None, weight=1, is_required=False):

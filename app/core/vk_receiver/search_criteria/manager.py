@@ -12,7 +12,14 @@ class CriteriaManager:
         'возраст': 'age',
         'пол': 'sex',
         'город': 'city',
-        'статус': 'status',
+        'статус': 'relation',
+    }
+
+    criteria_class = {
+        'age': AgeCriterion,
+        'sex': SexCriterion,
+        'city': CityCriterion,
+        'relation': RelationCriterion
     }
 
     def __init__(self):

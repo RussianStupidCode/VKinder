@@ -7,7 +7,7 @@ import math
 
 class VkInder:
     def __init__(self, vk_receiver, criteria):
-        self._user = VkUser(vk_receiver.get_user_json_info())
+        self._user = VkUser(vk_receiver.get_user_json_info())  # пользователь для которого осуществляется подбор
         self._vk_receiver = vk_receiver
         self._criteria = criteria
         VkInder.set_criteria_for_user(self._criteria, self._user)
@@ -15,6 +15,10 @@ class VkInder:
 
     def reset_save_users_id(self):
         self._save_user_id = set()
+
+    @property
+    def session(self):
+        return self._vk_receiver.session
 
     @staticmethod
     def set_criteria_for_user(criteria, user: VkUser):
@@ -39,6 +43,8 @@ class VkInder:
         return self._user
 
     def set_main_user(self, user_id):
+        if user_id == self.self_user_info.id:
+            return
         user_json_info = self._vk_receiver.get_user_json_info(user_id)
         self._user = VkUser(user_json_info)
         VkInder.set_criteria_for_user(self._criteria, self._user)
